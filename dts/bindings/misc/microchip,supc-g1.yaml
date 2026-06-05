@@ -1,0 +1,178 @@
+# Copyright (c) 2026 Microchip Technology Inc.
+# SPDX-License-Identifier: Apache-2.0
+
+title: Microchip G1 SUPC
+
+description: |
+  Microchip G1 SUPC peripherals.
+
+  Group G1 SUPC includes the following hardware peripherals:
+    - module name="SUPC" id="U2117" version="2.1.1"
+
+compatible: "microchip,supc-g1"
+
+include:
+  - name: base.yaml
+
+properties:
+  reg:
+    required: true
+
+  clocks:
+    required: true
+
+  clock-names:
+    required: true
+
+  interrupts:
+    required: true
+
+  standby-regulator:
+    type: int
+    enum:
+      - 0
+      - 1
+    description: |
+     Voltage regulator selection in standby mode.
+
+     When Reset, the voltage regulator switches to Low-Power
+     mode whenever the device enters Standby Sleep mode.
+     upon Setting, the voltage regulator remains in Normal
+     mode during Standby Sleep mode. Low-power mode is 
+     configured as default value.
+
+  volt-ref-on-demand:
+    type: int
+    enum:
+      - 0
+      - 1
+    description: |
+      Voltage reference on demand comtrol.
+
+      when reset, The voltage reference remains enabled whenever
+      it is configured to be enabled. when set, The voltage reference
+      is enabled only when a peripheral requests it and is
+      automatically disabled when no peripheral is using it.
+
+  volt-ref-standby-mode:
+    type: int
+    enum:
+      - 0
+      - 1
+    description: |
+      Voltage reference standby configuration.
+
+      The voltage reference is halted during standby sleep mode upon reset.
+      when set, The voltage reference is not stopped in standby sleep mode.
+      If volt-ref-on-demand = 1, the voltage reference will be running when a
+      peripheral is requesting it. If 0, the voltage reference will always be
+      running in standby sleep mode.
+
+  brown-out-det-en:
+    type: int
+    enum:
+      - 0
+      - 1
+    description: |
+      Brown out detector enable/disable.
+
+      Brown out detector is enabled by writting 1 and disabled by 
+      writting 0.
+
+  bod-hyst:
+    type: int
+    enum:
+      - 0
+      - 1
+    description: |
+      Brown out detector Hysteresis.
+
+      This is used for hysteresis enabling/disbaling for the
+      BODVDD threshold voltage. 0, No hysteresis. when 1,
+      Hysteresis enabled.
+
+  bod-vdd-action:
+    type: string
+    enum:
+      - "none"
+      - "reset"
+      - "interrupt"
+    description: |
+      Brown out detector action.
+
+      These bits are used to select the BODVDD action when
+      the supply voltage crosses below the BODVDD threshold.
+
+      - "none"      (0x0) - No action
+      - "reset"     (0x1) - The BODVDD generates a reset
+      - "interrupt" (0x2) - The BODVDD generates an interrupt
+  
+  standby-bod-en:
+    type: int
+    enum:
+      - 0
+      - 1
+    description: |
+      Brown out standby enable/disable..
+
+      0 - In standby sleep mode, the BODVDD is disabled.
+      1 - In standby sleep mode, the BODVDD is enabled.
+
+  standby-bod-mode:
+    type: string
+    enum:
+      - "continuous"
+      - "sampling"
+    description: |
+      BODVDD Configuration in Standby Sleep mode.
+      
+      In standby sleep mode,
+      - "continuous" (0x0) - The BODVDD is configured in continuous mode.
+      - "sampling"   (0x1) - The BODVDD is configured in sampling mode.
+
+  bod-active-mode:
+    type: string
+    enum:
+      - "continuous"
+      - "sampling"
+    description: |
+      BODVDD Configuration in Active mode.
+
+      In Active mode,
+      - "continuous" (0x0) - The BODVDD is configured in continuous mode.
+      - "sampling"   (0x1) - The BODVDD is configured in sampling mode.
+
+  bod-prescale-div:
+    type: int
+    default: 2
+    enum:
+    - 2
+    - 4
+    - 8
+    - 16
+    - 32
+    - 64
+    - 128
+    - 256
+    - 512
+    - 1024
+    - 2048
+    - 4096
+    - 8192
+    - 16384
+    - 32768
+    - 65536
+    description: |
+      Prescaler divide output for the BODVDD sampling mode.
+
+  bod-level:
+    type: int
+    default: 8
+    description: |
+      BODVDD Threshold Level on VDD.
+
+      Set the triggering voltage threshold for the BODVDD
+      when the BODVDD monitors the VDD. Range of value is 
+      0 to 63. The threshold range spans from 2.372 V (LEVEL = 0)
+      to 5.270 V (LEVEL = 63) in 46 mV steps. Default threshold
+      (LEVEL = 8) is 2.74 V.
